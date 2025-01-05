@@ -1,0 +1,211 @@
+import speech_recognition as sr
+import pyttsx3
+
+# Function to speak text using pyttsx3 (Female Voice)
+def speak(text):
+    print(text)  # Display the text in the console
+    engine = pyttsx3.init()
+    voices = engine.getProperty('voices')
+    engine.setProperty('voice', voices[1].id)  # Set voice to female
+    engine.setProperty('rate', 150)  # Adjust speech rate
+    engine.setProperty('volume', 1)  # Set volume level (0.0 to 1.0)
+    engine.say(text)
+    engine.runAndWait()
+
+# Function to listen to voice input
+def listen():
+    recognizer = sr.Recognizer()
+    with sr.Microphone() as source:
+        print("Listening for your input...")
+        recognizer.adjust_for_ambient_noise(source)  # Adjust for ambient noise
+        audio = recognizer.listen(source)
+    
+    try:
+        print("Recognizing...")
+        user_input = recognizer.recognize_google(audio)
+        print(f"You said: {user_input}")
+        return user_input.lower()
+    except sr.UnknownValueError:
+        speak("Sorry, I could not understand. Could you please repeat?")
+        return listen()
+    except sr.RequestError:
+        speak("Sorry, there was an issue with the service. Please try again later.")
+        return None
+
+# Function for calculating GST for foreign users
+def forigen():
+    speak("Enter the amount in dollars taken.")
+    usd = listen()  # Capture voice input
+    try:
+        usd = int(usd)  # Ensure it's a valid integer
+    except ValueError:
+        speak("Please provide a valid number for dollars.")
+        return forigen()
+
+    INR = 3.5  # Conversion rate from USD to INR
+    currency = usd / INR
+    if currency >= 1:
+        speak(f"Indian currency format of dollar is: {currency}")
+        speak("You can proceed.")
+        
+        # Asking for item category
+        speak("Enter the type of item you have with you on which GST will be applied.")
+        speak("1. Essential items")
+        speak("2. Basic necessities")
+        speak("3. Standard goods")
+        speak("4. Most consumer products")
+        speak("5. Luxury and sin goods")
+        item = listen()
+        
+        if item == '1':
+            speak("0% for essential items.")
+        elif item == '2':
+            speak("5% for basic necessities.")
+        elif item == '3':
+            speak("12% for standard goods.")
+        elif item == '4':
+            speak("18% for most consumer products.")
+        elif item == '5':
+            speak("28% for luxury and sin goods.")
+        else:
+            speak("Invalid selection, please enter a number between 1 and 5.")
+    else:
+        speak("The currency is too low.")
+        return forigen()
+
+# Function for calculating GST for Indian users
+def india():
+    speak("Enter the type of item you have with you on which GST will be applied.")
+    speak("1. Essential items")
+    speak("2. Basic necessities")
+    speak("3. Standard goods")
+    speak("4. Most consumer products")
+    speak("5. Luxury and sin goods")
+    item = listen()
+    
+    if item == '1':
+        speak("0% for essential items.")
+    elif item == '2':
+        speak("5% for basic necessities.")
+    elif item == '3':
+        speak("12% for standard goods.")
+    elif item == '4':
+        speak("18% for most consumer products.")
+    elif item == '5':
+        speak("28% for luxury and sin goods.")
+    else:
+        speak("Invalid selection, please enter a number between 1 and 5.")
+
+# Function to calculate GST for products
+def products():
+    speak("Enter 'same' if similar product purchased in bulk quantity or else type 'no'.")
+    same = listen()
+    
+    if same == 'same':
+        speak("Enter the price of one product.")
+        price = listen()  # Capture voice input
+        try:
+            price = int(price)  # Ensure it's a valid integer
+        except ValueError:
+            speak("Please provide a valid number for price.")
+            return products()
+
+        speak("Enter the total number of goods.")
+        n = listen()  # Capture voice input
+        try:
+            n = int(n)  # Ensure it's a valid integer
+        except ValueError:
+            speak("Please provide a valid number for the quantity.")
+            return products()
+
+        totalcost = price * n
+        speak(f"Your total cost of your product is: {totalcost}")
+        
+        # Asking if the user wants to calculate GST
+        speak("Do you want to calculate your GST? If yes, say yes, if no, say no.")
+        response = listen()
+        if response == 'yes':
+            speak("Enter the GST percentage.")
+            gstamount = listen()  # Capture GST percentage
+            try:
+                gstamount = int(gstamount)
+            except ValueError:
+                speak("Please provide a valid number for GST percentage.")
+                return products()
+
+            speak("Please confirm again: say yes for yes or no for no.")
+            choose = listen()
+            if choose == 'yes':
+                gst = (totalcost * gstamount) / 100
+                speak(f"Your GST amount on the product is: {gst}")
+                speak("Thank you for using the app.")
+            else:
+                speak("You don't want to calculate the GST amount.")
+        else:
+            speak("You don't want to calculate the GST amount.")
+    elif same == 'no':
+        speak("Enter the total number of different products purchased.")
+        size = listen()  # Capture number of products
+        try:
+            size = int(size)
+        except ValueError:
+            speak("Please provide a valid number for the total products.")
+            return products()
+
+        speak(f"Now, please list the price of each product.")
+        price = []
+        for i in range(size):
+            speak(f"Enter the price of product {i + 1}:")
+            price_input = listen()  # Capture each price
+            try:
+                price.append(int(price_input))
+            except ValueError:
+                speak(f"Invalid price for product {i + 1}. Please provide a valid number.")
+                return products()
+
+        totalcost = sum(price)
+        speak(f"The total price is: {totalcost}")
+        
+        # Asking if the user wants to calculate GST
+        speak("Do you want to calculate your GST? If yes, say yes, if no, say no.")
+        response = listen()
+        if response == 'yes':
+            speak("Enter the GST percentage.")
+            gstamount = listen()  # Capture GST percentage
+            try:
+                gstamount = int(gstamount)
+            except ValueError:
+                speak("Please provide a valid number for GST percentage.")
+                return products()
+
+            speak("Please confirm again: say yes for yes or no for no.")
+            choose = listen()
+            if choose == 'yes':
+                gst = (totalcost * gstamount) / 100
+                speak(f"Your GST amount is: {gst}")
+                speak("Thank you for using the app.")
+            else:
+                speak("You don't want to calculate the GST amount.")
+        else:
+            speak("You don't want to calculate the GST amount.")
+    else:
+        speak("Invalid input. Please restart the app and try again.")
+
+# Main function
+def main():
+    speak("Tell 'Foreign' for dollar or 'Rupees' for Indian currency.")
+    choice = listen()
+
+    if 'foreign' in choice:
+        forigen()
+    elif 'rupees' in choice:
+        india()
+    else:
+        speak("Please enter a valid choice or check your spelling. Close the app and try again.")
+        return
+
+    products()
+
+# Run the main function
+if __name__ == "__main__":
+    main()
