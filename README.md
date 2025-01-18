@@ -1,3 +1,30 @@
-# Advance-Gst-calculator
-"Advance GST calculations through voice-driven interaction, making tax-related decisions accessible and efficient for everyone."  This reflects the core idea of the project: using voice commands to calculate and understand GST in a user-friendly and automated manner.
-Also it provide details of total costing of product purchased by user so that the user themselves can get all the information from there voice itself no one can't fraud the customer as it is made to help people from being safe and Smart 
+Project Report: GST Calculator with Voice Interaction
+
+Vision of the project:
+This project aims to develop an interactive voice-enabled GST calculator, which will help users to calculate GST for foreign and Indian products with ease and speed. The application uses a speech recognition interface for taking voice input from the user and processes the response with the aid of text-to-speech technology for providing back the results to the user. It incorporates a currency conversion feature that aids foreigners in calculating GST in USD, which is then changed to INR.
+
+Technologies Used:
+Speech Recognition (speech_recognition): It receives the input from the user by voice.
+Text-to-Speech (pyttsx3): The output is communicated back to the user verbally.
+Standard Libraries of Python: It provides the basic logic and calculations.
+
+Key Features:
+Voice-based Input and Output:
+
+The user can give instructions entirely by voice in the system.
+The system will return further confirmation in a female voice (via pyttsx3), making the interface friendlier.
+
+Currency Conversion:
+
+The input for foreigners (those from outside India) is USD as currency ; the system will convert the amount back to INR, using a fixed conversion rate of 3.5.
+
+GST Calculation for Indian and Foreign Users:
+
+Users can input the category under which they want to calculate GST.
+The categories include:
+Essentials (0% GST)
+Needs (5% GST)
+General goods (12% GST)
+Vision goods (18% GST)
+Luxury Goods and Sin Goods (28% GST)
+For invalid input, the app checks and the user has an opportunity to re-enter their data. 
